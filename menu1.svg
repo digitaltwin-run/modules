@@ -81,328 +81,61 @@
     </g>
 
     <!-- Skrypt transformacji (wykonywany tylko w przeglądarce) -->
-    <script type="text/javascript"><![CDATA[
-    (function() {
-      'use strict';
-
-      console.log('🚀 [SVG-FORM] Script initialization started');
-      console.log('📍 [SVG-FORM] Environment:', typeof window !== 'undefined' ? 'Browser' : 'Unknown');
-      console.log('📍 [SVG-FORM] Document ready state:', document ? document.readyState : 'No document');
-
-      // Funkcja aktualizująca status debug
-      function updateDebugStatus(message) {
-        const statusElement = document.getElementById('debug-status');
-        if (statusElement) {
-          statusElement.textContent = `Status: ${message}`;
-          console.log(`📊 [SVG-FORM] Status updated: ${message}`);
-        }
-      }
-
-      // Sprawdź czy jesteśmy w przeglądarce
-      if (typeof window === 'undefined' || !window.document) {
-        console.warn('⚠️ [SVG-FORM] Not in browser environment, skipping transformation');
-        return;
-      }
-
-      updateDebugStatus('Browser detected, preparing transformation...');
-
-      // Główna funkcja transformująca SVG w HTML formularz
-      function transformToHTMLForm() {
-        console.log('🔄 [SVG-FORM] Starting SVG to HTML transformation');
-        updateDebugStatus('Transforming to HTML form...');
-
-        const svg = document.querySelector('svg');
-        const formContainer = document.getElementById('svg-form-container');
-
-        if (!svg || !formContainer) {
-          console.error('❌ [SVG-FORM] SVG or form container not found');
-          updateDebugStatus('Error: Container not found');
-          return;
-        }
-
-        console.log('✅ [SVG-FORM] Found SVG and form container');
-
-        // Stwórz foreignObject który zastąpi cały kontener formularza
-        const foreignObject = document.createElementNS('http://www.w3.org/2000/svg', 'foreignObject');
-        foreignObject.setAttribute('x', '20');
-        foreignObject.setAttribute('y', '80');
-        foreignObject.setAttribute('width', '360');
-        foreignObject.setAttribute('height', '470');
-
-        // Stwórz prawdziwy HTML form
-        const htmlForm = document.createElement('form');
-        htmlForm.id = 'interactive-form';
-        htmlForm.style.cssText = `
-          width: 100%;
-          height: 100%;
-          padding: 10px;
-          box-sizing: border-box;
-          background: transparent;
-        `;
-
-        console.log('📝 [SVG-FORM] Creating HTML form elements...');
-
-        // Username field
-        const usernameGroup = createFormGroup('Username', 'text', 'username', 'Enter your username');
-        htmlForm.appendChild(usernameGroup);
-        console.log('  ✓ Username field created');
-
-        // Email field
-        const emailGroup = createFormGroup('Email Address', 'email', 'email', 'your.email@example.com');
-        htmlForm.appendChild(emailGroup);
-        console.log('  ✓ Email field created');
-
-        // Password field
-        const passwordGroup = createFormGroup('Password', 'password', 'password', '');
-        htmlForm.appendChild(passwordGroup);
-        console.log('  ✓ Password field created');
-
-        // Country select
-        const countryGroup = createSelectGroup('Country', 'country', [
-          { value: '', text: 'Select your country' },
-          { value: 'pl', text: 'Poland' },
-          { value: 'de', text: 'Germany' },
-          { value: 'fr', text: 'France' },
-          { value: 'es', text: 'Spain' },
-          { value: 'it', text: 'Italy' },
-          { value: 'uk', text: 'United Kingdom' },
-          { value: 'us', text: 'United States' }
-        ]);
-        htmlForm.appendChild(countryGroup);
-        console.log('  ✓ Country select created');
-
-        // Bio textarea
-        const bioGroup = createTextareaGroup('Bio', 'bio', 'Tell us about yourself...');
-        htmlForm.appendChild(bioGroup);
-        console.log('  ✓ Bio textarea created');
-
-        // Terms checkbox
-        const termsGroup = createCheckboxGroup('terms', 'I agree to the Terms and Conditions');
-        htmlForm.appendChild(termsGroup);
-        console.log('  ✓ Terms checkbox created');
-
-        // Newsletter radio
-        const newsletterGroup = createRadioGroup('Newsletter Subscription', 'newsletter', [
-          { value: 'yes', text: 'Yes, subscribe me' },
-          { value: 'no', text: 'No, thanks' }
-        ]);
-        htmlForm.appendChild(newsletterGroup);
-        console.log('  ✓ Newsletter radio buttons created');
-
-        // Submit button
-        const submitButton = document.createElement('button');
-        submitButton.type = 'submit';
-        submitButton.textContent = 'Create Account';
-        submitButton.style.cssText = `
-          width: 100%;
-          margin-top: 20px;
-          padding: 12px;
-          background: #3b82f6;
-          color: white;
-          border: none;
-          border-radius: 6px;
-          font-size: 14px;
-          font-weight: 600;
-          cursor: pointer;
-        `;
-        submitButton.onmouseover = () => submitButton.style.background = '#2563eb';
-        submitButton.onmouseout = () => submitButton.style.background = '#3b82f6';
-        htmlForm.appendChild(submitButton);
-        console.log('  ✓ Submit button created');
-
-        // Dodaj event listener do formularza
-        htmlForm.addEventListener('submit', function(e) {
-          e.preventDefault();
-          console.log('📤 [SVG-FORM] Form submitted!');
-
-          const formData = new FormData(htmlForm);
-          const data = {};
-
-          for (let [key, value] of formData.entries()) {
-            data[key] = value;
-            console.log(`  ${key}: ${value}`);
-          }
-
-          alert('Form submitted successfully! Check console for data.');
-          updateDebugStatus('Form submitted at ' + new Date().toLocaleTimeString());
-        });
-
-        // Dodaj formularz do foreignObject
-        foreignObject.appendChild(htmlForm);
-
-        // Zastąp oryginalny kontener
-        formContainer.style.display = 'none';
-        svg.appendChild(foreignObject);
-
-        console.log('✅ [SVG-FORM] Transformation complete!');
-        updateDebugStatus('Interactive HTML form ready');
-
-        // Dodaj informację o liczbie pól
-        const fieldCount = htmlForm.querySelectorAll('input, select, textarea').length;
-        console.log(`📊 [SVG-FORM] Created ${fieldCount} form fields`);
-      }
-
-      // Helper functions do tworzenia elementów formularza
-      function createFormGroup(label, type, name, placeholder) {
-        const group = document.createElement('div');
-        group.style.cssText = 'margin-bottom: 15px;';
-
-        const labelEl = document.createElement('label');
-        labelEl.textContent = label;
-        labelEl.style.cssText = 'display: block; color: #9ca3af; font-size: 12px; margin-bottom: 5px;';
-
-        const input = document.createElement('input');
-        input.type = type;
-        input.name = name;
-        input.placeholder = placeholder;
-        input.style.cssText = `
-          width: 100%;
-          padding: 8px 10px;
-          background: #1f1f1f;
-          border: 1px solid #404040;
-          border-radius: 4px;
-          color: #e5e7eb;
-          font-size: 14px;
-          box-sizing: border-box;
-        `;
-
-        group.appendChild(labelEl);
-        group.appendChild(input);
-        return group;
-      }
-
-      function createSelectGroup(label, name, options) {
-        const group = document.createElement('div');
-        group.style.cssText = 'margin-bottom: 15px;';
-
-        const labelEl = document.createElement('label');
-        labelEl.textContent = label;
-        labelEl.style.cssText = 'display: block; color: #9ca3af; font-size: 12px; margin-bottom: 5px;';
-
-        const select = document.createElement('select');
-        select.name = name;
-        select.style.cssText = `
-          width: 100%;
-          padding: 8px 10px;
-          background: #1f1f1f;
-          border: 1px solid #404040;
-          border-radius: 4px;
-          color: #e5e7eb;
-          font-size: 14px;
-          box-sizing: border-box;
-        `;
-
-        options.forEach(opt => {
-          const option = document.createElement('option');
-          option.value = opt.value;
-          option.textContent = opt.text;
-          select.appendChild(option);
-        });
-
-        group.appendChild(labelEl);
-        group.appendChild(select);
-        return group;
-      }
-
-      function createTextareaGroup(label, name, placeholder) {
-        const group = document.createElement('div');
-        group.style.cssText = 'margin-bottom: 15px;';
-
-        const labelEl = document.createElement('label');
-        labelEl.textContent = label;
-        labelEl.style.cssText = 'display: block; color: #9ca3af; font-size: 12px; margin-bottom: 5px;';
-
-        const textarea = document.createElement('textarea');
-        textarea.name = name;
-        textarea.placeholder = placeholder;
-        textarea.rows = 3;
-        textarea.style.cssText = `
-          width: 100%;
-          padding: 8px 10px;
-          background: #1f1f1f;
-          border: 1px solid #404040;
-          border-radius: 4px;
-          color: #e5e7eb;
-          font-size: 14px;
-          box-sizing: border-box;
-          resize: vertical;
-        `;
-
-        group.appendChild(labelEl);
-        group.appendChild(textarea);
-        return group;
-      }
-
-      function createCheckboxGroup(name, labelText) {
-        const group = document.createElement('div');
-        group.style.cssText = 'margin-bottom: 15px; display: flex; align-items: center;';
-
-        const checkbox = document.createElement('input');
-        checkbox.type = 'checkbox';
-        checkbox.name = name;
-        checkbox.style.cssText = 'margin-right: 8px;';
-
-        const label = document.createElement('label');
-        label.textContent = labelText;
-        label.style.cssText = 'color: #9ca3af; font-size: 12px;';
-
-        group.appendChild(checkbox);
-        group.appendChild(label);
-        return group;
-      }
-
-      function createRadioGroup(label, name, options) {
-        const group = document.createElement('div');
-        group.style.cssText = 'margin-bottom: 15px;';
-
-        const labelEl = document.createElement('label');
-        labelEl.textContent = label;
-        labelEl.style.cssText = 'display: block; color: #9ca3af; font-size: 12px; margin-bottom: 5px;';
-        group.appendChild(labelEl);
-
-        options.forEach(opt => {
-          const radioGroup = document.createElement('div');
-          radioGroup.style.cssText = 'display: inline-block; margin-right: 20px;';
-
-          const radio = document.createElement('input');
-          radio.type = 'radio';
-          radio.name = name;
-          radio.value = opt.value;
-          radio.style.cssText = 'margin-right: 5px;';
-
-          const radioLabel = document.createElement('label');
-          radioLabel.textContent = opt.text;
-          radioLabel.style.cssText = 'color: #9ca3af; font-size: 12px;';
-
-          radioGroup.appendChild(radio);
-          radioGroup.appendChild(radioLabel);
-          group.appendChild(radioGroup);
-        });
-
-        return group;
-      }
-
-      // Wykonaj transformację gdy DOM jest gotowy
-      if (document.readyState === 'loading') {
-        console.log('⏳ [SVG-FORM] Waiting for DOM to be ready...');
+    <script>
+      <![CDATA[
         document.addEventListener('DOMContentLoaded', function() {
-          console.log('✅ [SVG-FORM] DOM ready, starting transformation');
-          transformToHTMLForm();
+          try {
+            const container = document.getElementById('svg-form-container');
+            if (!container) return;
+
+            // Stwórz kontener HTML w SVG
+            const fo = document.createElementNS('http://www.w3.org/2000/svg', 'foreignObject');
+            fo.setAttribute('x', '20');
+            fo.setAttribute('y', '80');
+            fo.setAttribute('width', '360');
+            fo.setAttribute('height', '470');
+
+            const div = document.createElementNS('http://www.w3.org/1999/xhtml', 'div');
+
+            // Wstaw formularz HTML
+            div.innerHTML = `
+              <form id="interactive-form" style="width:100%;height:100%;padding:10px;box-sizing:border-box;background:transparent;">
+                <div style="margin-bottom:15px;"><label style="display:block;color:#9ca3af;font-size:12px;margin-bottom:5px;">Username</label><input type="text" name="username" placeholder="Enter your username" style="width:100%;padding:8px 10px;background:#1f1f1f;border:1px solid #404040;border-radius:4px;color:#e5e7eb;font-size:14px;box-sizing:border-box;" /></div>
+                <div style="margin-bottom:15px;"><label style="display:block;color:#9ca3af;font-size:12px;margin-bottom:5px;">Email Address</label><input type="email" name="email" placeholder="your.email@example.com" style="width:100%;padding:8px 10px;background:#1f1f1f;border:1px solid #404040;border-radius:4px;color:#e5e7eb;font-size:14px;box-sizing:border-box;" /></div>
+                <div style="margin-bottom:15px;"><label style="display:block;color:#9ca3af;font-size:12px;margin-bottom:5px;">Password</label><input type="password" name="password" style="width:100%;padding:8px 10px;background:#1f1f1f;border:1px solid #404040;border-radius:4px;color:#e5e7eb;font-size:14px;box-sizing:border-box;" /></div>
+                <div style="margin-bottom:15px;"><label style="display:block;color:#9ca3af;font-size:12px;margin-bottom:5px;">Country</label><select name="country" style="width:100%;padding:8px 10px;background:#1f1f1f;border:1px solid #404040;border-radius:4px;color:#e5e7eb;font-size:14px;box-sizing:border-box;"><option value="">Select your country</option><option value="pl">Poland</option><option value="de">Germany</option><option value="fr">France</option><option value="es">Spain</option><option value="it">Italy</option><option value="uk">United Kingdom</option><option value="us">United States</option></select></div>
+                <div style="margin-bottom:15px;"><label style="display:block;color:#9ca3af;font-size:12px;margin-bottom:5px;">Bio</label><textarea name="bio" placeholder="Tell us about yourself..." rows="3" style="width:100%;padding:8px 10px;background:#1f1f1f;border:1px solid #404040;border-radius:4px;color:#e5e7eb;font-size:14px;box-sizing:border-box;resize:vertical;"></textarea></div>
+                <div style="margin-bottom:15px;display:flex;align-items:center;"><input type="checkbox" name="terms" style="margin-right:8px;" /><label style="color:#9ca3af;font-size:12px;">I agree to the Terms and Conditions</label></div>
+                <div style="margin-bottom:15px;"><label style="display:block;color:#9ca3af;font-size:12px;margin-bottom:5px;">Newsletter Subscription</label><div style="display:inline-block;margin-right:20px;"><input type="radio" name="newsletter" value="yes" style="margin-right:5px;" /><label style="color:#9ca3af;font-size:12px;">Yes, subscribe me</label></div><div style="display:inline-block;margin-right:20px;"><input type="radio" name="newsletter" value="no" style="margin-right:5px;" /><label style="color:#9ca3af;font-size:12px;">No, thanks</label></div></div>
+                <button type="submit" style="width:100%;margin-top:20px;padding:12px;background:#3b82f6;color:white;border:none;border-radius:6px;font-size:14px;font-weight:600;cursor:pointer;">Create Account</button>
+              </form>
+            `;
+
+            // Dodaj obsługę formularza
+            setTimeout(() => {
+              const form = div.querySelector('#interactive-form');
+              if (form) form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                alert('Form submitted successfully!');
+              });
+            }, 0);
+
+            // Dodaj obsługę formularza
+            setTimeout(() => {
+              const form = div.querySelector('#interactive-form');
+              if (form) form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                alert('Form submitted successfully!');
+              });
+            }, 0);
+
+            container.innerHTML = '';
+            fo.appendChild(div);
+            container.appendChild(fo);
+          } catch (error) {
+            console.error('Form error:', error);
+          }
         });
-      } else {
-        console.log('✅ [SVG-FORM] DOM already ready, starting transformation immediately');
-        setTimeout(transformToHTMLForm, 0); // Użyj setTimeout dla pewności
-      }
-
-      // Dodatkowy fallback
-      window.addEventListener('load', function() {
-        console.log('🔄 [SVG-FORM] Window load event fired');
-        if (!document.getElementById('interactive-form')) {
-          console.log('⚠️ [SVG-FORM] Form not found, attempting transformation again');
-          transformToHTMLForm();
-        }
-      });
-
-    })();
-  ]]></script>
+      ]]>
+    </script>
 </svg>
