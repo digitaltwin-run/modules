@@ -1,0 +1,318 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xhtml="http://www.w3.org/1999/xhtml"
+     width="400" height="600" viewBox="0 0 400 600">
+
+    <title>Dark Form Template</title>
+    <desc>SVG form template with text fields that transform to inputs in browser</desc>
+
+    <defs>
+        <style>
+            /* Podstawowe style dla podglądu SVG */
+            .background { fill: #1a1a1a; }
+            .panel { fill: #2d2d2d; stroke: #404040; stroke-width: 1; rx: 8; }
+            .label { fill: #9ca3af; font-family: system-ui, -apple-system, sans-serif; font-size: 12px; }
+            .input { fill: #1f1f1f; stroke: #404040; stroke-width: 1; rx: 4; }
+            .input-text { fill: #e5e7eb; font-family: system-ui, -apple-system, sans-serif; font-size: 14px; }
+            .input-placeholder { fill: #6b7280; font-family: system-ui, -apple-system, sans-serif; font-size: 14px; font-style: italic; }
+            .button { fill: #3b82f6; stroke: #2563eb; stroke-width: 1; rx: 6; cursor: pointer; }
+            .button:hover { fill: #2563eb; }
+            .button-text { fill: #ffffff; font-family: system-ui, -apple-system, sans-serif; font-size: 14px; font-weight: 600; pointer-events: none; }
+            .title { fill: #f3f4f6; font-family: system-ui, -apple-system, sans-serif; font-size: 24px; font-weight: bold; }
+            .checkbox { fill: #1f1f1f; stroke: #404040; stroke-width: 1; rx: 3; }
+            .radio { fill: #1f1f1f; stroke: #404040; stroke-width: 1; }
+            .select { fill: #1f1f1f; stroke: #404040; stroke-width: 1; rx: 4; }
+            .textarea { fill: #1f1f1f; stroke: #404040; stroke-width: 1; rx: 4; }
+        </style>
+    </defs>
+
+    <!-- Tło -->
+    <rect class="background" width="400" height="600"/>
+
+    <!-- Panel główny -->
+    <rect class="panel" x="20" y="20" width="360" height="560"/>
+
+    <!-- Tytuł formularza -->
+    <text class="title" x="200" y="60" text-anchor="middle">User Registration</text>
+
+    <!-- Pole: Username -->
+    <text class="label" x="40" y="100" data-for="username">Username</text>
+    <rect class="input" x="40" y="105" width="320" height="36" data-type="text" data-name="username"/>
+    <text class="input-placeholder" x="50" y="127" data-placeholder="username">Enter your username</text>
+
+    <!-- Pole: Email -->
+    <text class="label" x="40" y="165" data-for="email">Email Address</text>
+    <rect class="input" x="40" y="170" width="320" height="36" data-type="email" data-name="email"/>
+    <text class="input-placeholder" x="50" y="192" data-placeholder="email">your.email@example.com</text>
+
+    <!-- Pole: Password -->
+    <text class="label" x="40" y="230" data-for="password">Password</text>
+    <rect class="input" x="40" y="235" width="320" height="36" data-type="password" data-name="password"/>
+    <text class="input-placeholder" x="50" y="257" data-placeholder="password">••••••••</text>
+
+    <!-- Pole: Select (Country) -->
+    <text class="label" x="40" y="295" data-for="country">Country</text>
+    <rect class="select" x="40" y="300" width="320" height="36" data-type="select" data-name="country"/>
+    <text class="input-text" x="50" y="322" data-value="country">Select your country ▼</text>
+
+    <!-- Pole: Textarea (Bio) -->
+    <text class="label" x="40" y="360" data-for="bio">Bio</text>
+    <rect class="textarea" x="40" y="365" width="320" height="80" data-type="textarea" data-name="bio"/>
+    <text class="input-placeholder" x="50" y="387" data-placeholder="bio">Tell us about yourself...</text>
+
+    <!-- Checkbox: Terms -->
+    <rect class="checkbox" x="40" y="465" width="16" height="16" data-type="checkbox" data-name="terms"/>
+    <text class="label" x="65" y="477" data-for="terms">I agree to the Terms and Conditions</text>
+
+    <!-- Radio buttons: Newsletter -->
+    <text class="label" x="40" y="505" data-for="newsletter">Newsletter Subscription</text>
+    <circle class="radio" cx="48" cy="523" r="8" data-type="radio" data-name="newsletter" data-value="yes"/>
+    <text class="label" x="65" y="527">Yes, subscribe me</text>
+    <circle class="radio" cx="180" cy="523" r="8" data-type="radio" data-name="newsletter" data-value="no"/>
+    <text class="label" x="197" y="527">No, thanks</text>
+
+    <!-- Submit Button -->
+    <rect class="button" x="120" y="550" width="160" height="40" data-type="button" data-action="submit"/>
+    <text class="button-text" x="200" y="575" text-anchor="middle">Create Account</text>
+
+    <!-- Skrypt transformacji (wykonywany tylko w przeglądarce) -->
+    <script type="text/javascript"><![CDATA[
+    (function() {
+      'use strict';
+
+      // Sprawdź czy jesteśmy w przeglądarce
+      if (typeof window === 'undefined' || !window.document) {
+        return; // Nie wykonuj w podglądzie plików
+      }
+
+      // Funkcja transformująca SVG w interaktywny formularz
+      function transformToInteractiveForm() {
+        const svg = document.querySelector('svg');
+        if (!svg) return;
+
+        // Znajdź wszystkie elementy do transformacji
+        const elements = {
+          inputs: svg.querySelectorAll('rect.input[data-type="text"], rect.input[data-type="email"], rect.input[data-type="password"]'),
+          selects: svg.querySelectorAll('rect.select[data-type="select"]'),
+          textareas: svg.querySelectorAll('rect.textarea[data-type="textarea"]'),
+          checkboxes: svg.querySelectorAll('rect.checkbox[data-type="checkbox"]'),
+          radios: svg.querySelectorAll('circle.radio[data-type="radio"]'),
+          buttons: svg.querySelectorAll('rect.button[data-type="button"]')
+        };
+
+        // Transformuj text inputy
+        elements.inputs.forEach(rect => {
+          const x = rect.getAttribute('x');
+          const y = rect.getAttribute('y');
+          const width = rect.getAttribute('width');
+          const height = rect.getAttribute('height');
+          const type = rect.getAttribute('data-type');
+          const name = rect.getAttribute('data-name');
+
+          // Ukryj placeholder text
+          const placeholder = svg.querySelector(`text[data-placeholder="${name}"]`);
+          if (placeholder) placeholder.style.display = 'none';
+
+          // Stwórz foreignObject z input
+          const fo = document.createElementNS('http://www.w3.org/2000/svg', 'foreignObject');
+          fo.setAttribute('x', x);
+          fo.setAttribute('y', y);
+          fo.setAttribute('width', width);
+          fo.setAttribute('height', height);
+
+          const input = document.createElement('input');
+          input.type = type;
+          input.name = name;
+          input.placeholder = placeholder ? placeholder.textContent : '';
+          input.style.cssText = `
+            width: 100%;
+            height: 100%;
+            background: #1f1f1f;
+            border: 1px solid #404040;
+            border-radius: 4px;
+            color: #e5e7eb;
+            padding: 0 10px;
+            font-size: 14px;
+            font-family: system-ui, -apple-system, sans-serif;
+            box-sizing: border-box;
+          `;
+
+          fo.appendChild(input);
+          rect.parentNode.replaceChild(fo, rect);
+        });
+
+        // Transformuj select
+        elements.selects.forEach(rect => {
+          const x = rect.getAttribute('x');
+          const y = rect.getAttribute('y');
+          const width = rect.getAttribute('width');
+          const height = rect.getAttribute('height');
+          const name = rect.getAttribute('data-name');
+
+          // Ukryj text
+          const valueText = svg.querySelector(`text[data-value="${name}"]`);
+          if (valueText) valueText.style.display = 'none';
+
+          const fo = document.createElementNS('http://www.w3.org/2000/svg', 'foreignObject');
+          fo.setAttribute('x', x);
+          fo.setAttribute('y', y);
+          fo.setAttribute('width', width);
+          fo.setAttribute('height', height);
+
+          const select = document.createElement('select');
+          select.name = name;
+          select.style.cssText = `
+            width: 100%;
+            height: 100%;
+            background: #1f1f1f;
+            border: 1px solid #404040;
+            border-radius: 4px;
+            color: #e5e7eb;
+            padding: 0 10px;
+            font-size: 14px;
+            font-family: system-ui, -apple-system, sans-serif;
+            box-sizing: border-box;
+          `;
+
+          // Dodaj przykładowe opcje
+          ['Select your country', 'Poland', 'Germany', 'France', 'Spain', 'Italy', 'UK', 'USA'].forEach(country => {
+            const option = document.createElement('option');
+            option.value = country.toLowerCase().replace(/\s/g, '-');
+            option.textContent = country;
+            select.appendChild(option);
+          });
+
+          fo.appendChild(select);
+          rect.parentNode.replaceChild(fo, rect);
+        });
+
+        // Transformuj textarea
+        elements.textareas.forEach(rect => {
+          const x = rect.getAttribute('x');
+          const y = rect.getAttribute('y');
+          const width = rect.getAttribute('width');
+          const height = rect.getAttribute('height');
+          const name = rect.getAttribute('data-name');
+
+          // Ukryj placeholder
+          const placeholder = svg.querySelector(`text[data-placeholder="${name}"]`);
+          if (placeholder) placeholder.style.display = 'none';
+
+          const fo = document.createElementNS('http://www.w3.org/2000/svg', 'foreignObject');
+          fo.setAttribute('x', x);
+          fo.setAttribute('y', y);
+          fo.setAttribute('width', width);
+          fo.setAttribute('height', height);
+
+          const textarea = document.createElement('textarea');
+          textarea.name = name;
+          textarea.placeholder = placeholder ? placeholder.textContent : '';
+          textarea.style.cssText = `
+            width: 100%;
+            height: 100%;
+            background: #1f1f1f;
+            border: 1px solid #404040;
+            border-radius: 4px;
+            color: #e5e7eb;
+            padding: 10px;
+            font-size: 14px;
+            font-family: system-ui, -apple-system, sans-serif;
+            box-sizing: border-box;
+            resize: none;
+          `;
+
+          fo.appendChild(textarea);
+          rect.parentNode.replaceChild(fo, rect);
+        });
+
+        // Transformuj checkboxy
+        elements.checkboxes.forEach(rect => {
+          const x = parseFloat(rect.getAttribute('x'));
+          const y = parseFloat(rect.getAttribute('y'));
+          const name = rect.getAttribute('data-name');
+
+          const fo = document.createElementNS('http://www.w3.org/2000/svg', 'foreignObject');
+          fo.setAttribute('x', x);
+          fo.setAttribute('y', y);
+          fo.setAttribute('width', '16');
+          fo.setAttribute('height', '16');
+
+          const checkbox = document.createElement('input');
+          checkbox.type = 'checkbox';
+          checkbox.name = name;
+          checkbox.style.cssText = `
+            width: 16px;
+            height: 16px;
+            background: #1f1f1f;
+            border: 1px solid #404040;
+            border-radius: 3px;
+          `;
+
+          fo.appendChild(checkbox);
+          rect.parentNode.replaceChild(fo, rect);
+        });
+
+        // Transformuj radio
+        elements.radios.forEach(circle => {
+          const cx = parseFloat(circle.getAttribute('cx'));
+          const cy = parseFloat(circle.getAttribute('cy'));
+          const name = circle.getAttribute('data-name');
+          const value = circle.getAttribute('data-value');
+
+          const fo = document.createElementNS('http://www.w3.org/2000/svg', 'foreignObject');
+          fo.setAttribute('x', cx - 8);
+          fo.setAttribute('y', cy - 8);
+          fo.setAttribute('width', '16');
+          fo.setAttribute('height', '16');
+
+          const radio = document.createElement('input');
+          radio.type = 'radio';
+          radio.name = name;
+          radio.value = value;
+          radio.style.cssText = `
+            width: 16px;
+            height: 16px;
+            background: #1f1f1f;
+            border: 1px solid #404040;
+          `;
+
+          fo.appendChild(radio);
+          circle.parentNode.replaceChild(fo, circle);
+        });
+
+        // Dodaj event listener do przycisku
+        elements.buttons.forEach(button => {
+          button.addEventListener('click', function() {
+            const formData = new FormData();
+
+            // Zbierz wszystkie dane z formularza
+            svg.querySelectorAll('input, select, textarea').forEach(field => {
+              if (field.type === 'checkbox' || field.type === 'radio') {
+                if (field.checked) {
+                  formData.append(field.name, field.value || 'on');
+                }
+              } else {
+                formData.append(field.name, field.value);
+              }
+            });
+
+            // Wyświetl dane (w prawdziwej aplikacji wysłałbyś je na serwer)
+            console.log('Form Data:');
+            for (let [key, value] of formData.entries()) {
+              console.log(`${key}: ${value}`);
+            }
+
+            alert('Form submitted! Check console for data.');
+          });
+        });
+
+        console.log('SVG form transformed to interactive HTML form');
+      }
+
+      // Wykonaj transformację gdy DOM jest gotowy
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', transformToInteractiveForm);
+      } else {
+        transformToInteractiveForm();
+      }
+    })();
+  ]]></script>
+</svg>

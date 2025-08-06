@@ -1,0 +1,203 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="600">
+    <foreignObject width="100%" height="100%">
+        <div xmlns="http://www.w3.org/1999/xhtml">
+            <style>
+                body {
+                margin: 0;
+                font-family: Arial, sans-serif;
+                background: #f8f9fa;
+                color: #212529;
+                }
+
+                .font-editor {
+                background: #fff;
+                border: 1px solid #ced4da;
+                border-radius: 8px;
+                padding: 16px;
+                max-width: 560px;
+                margin: 10px auto;
+                }
+
+                .font-editor h4 {
+                margin: 0 0 16px;
+                font-size: 18px;
+                font-weight: 600;
+                }
+
+                .font-group {
+                margin-bottom: 16px;
+                }
+
+                .font-label {
+                display: block;
+                margin-bottom: 6px;
+                font-weight: 500;
+                }
+
+                select,
+                input[type="number"] {
+                width: 100%;
+                padding: 8px;
+                font-size: 14px;
+                border: 1px solid #ced4da;
+                border-radius: 4px;
+                }
+
+                .font-style-btn,
+                .font-decoration-btn,
+                .font-preset-btn,
+                .font-btn {
+                margin: 4px;
+                padding: 6px 10px;
+                font-size: 14px;
+                border: 1px solid #ced4da;
+                border-radius: 4px;
+                cursor: pointer;
+                }
+
+                .font-preview {
+                padding: 12px;
+                border: 1px dashed #ced4da;
+                border-radius: 4px;
+                background: #fff;
+                margin-top: 10px;
+                }
+
+                .font-btn-apply {
+                background: #007bff;
+                color: #fff;
+                border-color: #007bff;
+                }
+
+                .font-btn-reset {
+                background: #f8f9fa;
+                }
+            </style>
+            <div class="font-editor">
+                <h4>Font Settings</h4>
+
+                <div class="font-group">
+                    <label class="font-label">Font Family:</label>
+                    <select class="font-family-select">
+                        <option value="Arial, sans-serif">Arial</option>
+                        <option value="Helvetica, sans-serif">Helvetica</option>
+                        <option value="Times New Roman, serif">Times New Roman</option>
+                    </select>
+                </div>
+
+                <div class="font-group">
+                    <label class="font-label">Font Size:</label>
+                    <input type="number" class="font-size-input" value="14" min="8" max="72"> px
+                    <div>
+                        <button class="font-preset-btn" data-size="12">12</button>
+                        <button class="font-preset-btn" data-size="14">14</button>
+                        <button class="font-preset-btn" data-size="18">18</button>
+                    </div>
+                </div>
+
+                <div class="font-group">
+                    <label class="font-label">Font Style:</label>
+                    <button class="font-style-btn" data-style="normal">Normal</button>
+                    <button class="font-style-btn" data-style="italic">Italic</button>
+                </div>
+
+                <div class="font-group">
+                    <label class="font-label">Text Decoration:</label>
+                    <button class="font-decoration-btn" data-decoration="none">None</button>
+                    <button class="font-decoration-btn" data-decoration="underline">Underline</button>
+                </div>
+
+                <div class="font-group">
+                    <label class="font-label">Preview:</label>
+                    <div class="font-preview">
+                        <span class="font-preview-text">The quick brown fox jumps over the lazy dog</span>
+                    </div>
+                </div>
+
+                <div>
+                    <button class="font-btn font-btn-apply">Apply</button>
+                    <button class="font-btn font-btn-reset">Reset</button>
+                </div>
+            </div>
+
+            <script>
+                const container = document.querySelector('.font-editor');
+                const preview = container.querySelector('.font-preview-text');
+
+                const fontFamilySelect = container.querySelector('.font-family-select');
+                const fontSizeInput = container.querySelector('.font-size-input');
+
+                const presetButtons = container.querySelectorAll('.font-preset-btn');
+                const styleButtons = container.querySelectorAll('.font-style-btn');
+                const decorationButtons = container.querySelectorAll('.font-decoration-btn');
+                const applyBtn = container.querySelector('.font-btn-apply');
+                const resetBtn = container.querySelector('.font-btn-reset');
+
+                let config = {
+                    fontFamily: fontFamilySelect.value,
+                    fontSize: fontSizeInput.value + 'px',
+                    fontStyle: 'normal',
+                    textDecoration: 'none'
+                };
+
+                function updatePreview() {
+                    preview.style.fontFamily = config.fontFamily;
+                    preview.style.fontSize = config.fontSize;
+                    preview.style.fontStyle = config.fontStyle;
+                    preview.style.textDecoration = config.textDecoration;
+                }
+
+                fontFamilySelect.addEventListener('change', (e) => {
+                    config.fontFamily = e.target.value;
+                    updatePreview();
+                });
+
+                fontSizeInput.addEventListener('input', (e) => {
+                    config.fontSize = e.target.value + 'px';
+                    updatePreview();
+                });
+
+                presetButtons.forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const size = btn.dataset.size;
+                        fontSizeInput.value = size;
+                        config.fontSize = size + 'px';
+                        updatePreview();
+                    });
+                });
+
+                styleButtons.forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        config.fontStyle = btn.dataset.style;
+                        updatePreview();
+                    });
+                });
+
+                decorationButtons.forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        config.textDecoration = btn.dataset.decoration;
+                        updatePreview();
+                    });
+                });
+
+                applyBtn.addEventListener('click', () => {
+                    alert('Font applied: ' + JSON.stringify(config, null, 2));
+                });
+
+                resetBtn.addEventListener('click', () => {
+                    config = {
+                        fontFamily: 'Arial, sans-serif',
+                        fontSize: '14px',
+                        fontStyle: 'normal',
+                        textDecoration: 'none'
+                    };
+                    fontFamilySelect.value = 'Arial, sans-serif';
+                    fontSizeInput.value = '14';
+                    updatePreview();
+                });
+
+                updatePreview();
+            </script>
+        </div>
+    </foreignObject>
+</svg>
