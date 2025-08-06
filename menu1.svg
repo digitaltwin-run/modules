@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xhtml="http://www.w3.org/1999/xhtml"
-     width="400" height="600" viewBox="0 0 400 600">
+     width="400" height="700" viewBox="0 0 400 700">
 
     <title>Dark Form Template</title>
     <desc>SVG form template with text fields that transform to inputs in browser</desc>
@@ -21,117 +21,49 @@
             .radio { fill: #1f1f1f; stroke: #404040; stroke-width: 1; }
             .select { fill: #1f1f1f; stroke: #404040; stroke-width: 1; rx: 4; }
             .textarea { fill: #1f1f1f; stroke: #404040; stroke-width: 1; rx: 4; }
-            .debug-log { fill: #10b981; font-family: monospace; font-size: 10px; }
         </style>
     </defs>
 
     <!-- Tło -->
-    <rect class="background" width="400" height="600"/>
+    <rect class="background" width="400" height="700"/>
 
     <!-- Panel główny -->
-    <rect class="panel" x="20" y="20" width="360" height="560"/>
+    <rect class="panel" x="20" y="20" width="360" height="650"/>
 
     <!-- Tytuł formularza -->
     <text class="title" x="200" y="60" text-anchor="middle">User Registration</text>
 
-    <!-- Debug info (będzie wypełnione przez skrypt) -->
-    <text class="debug-log" x="25" y="580" id="debug-status">Status: Static SVG</text>
 
-    <!-- Container na cały formularz - będzie zastąpiony w przeglądarce -->
-    <g id="svg-form-container">
-        <!-- Pole: Username -->
-        <text class="label" x="40" y="100" data-for="username">Username</text>
-        <rect class="input" x="40" y="105" width="320" height="36" data-type="text" data-name="username"/>
-        <text class="input-placeholder" x="50" y="127" data-placeholder="username">Enter your username</text>
-
-        <!-- Pole: Email -->
-        <text class="label" x="40" y="165" data-for="email">Email Address</text>
-        <rect class="input" x="40" y="170" width="320" height="36" data-type="email" data-name="email"/>
-        <text class="input-placeholder" x="50" y="192" data-placeholder="email">your.email@example.com</text>
-
-        <!-- Pole: Password -->
-        <text class="label" x="40" y="230" data-for="password">Password</text>
-        <rect class="input" x="40" y="235" width="320" height="36" data-type="password" data-name="password"/>
-        <text class="input-placeholder" x="50" y="257" data-placeholder="password">••••••••</text>
-
-        <!-- Pole: Select (Country) -->
-        <text class="label" x="40" y="295" data-for="country">Country</text>
-        <rect class="select" x="40" y="300" width="320" height="36" data-type="select" data-name="country"/>
-        <text class="input-text" x="50" y="322" data-value="country">Select your country ▼</text>
-
-        <!-- Pole: Textarea (Bio) -->
-        <text class="label" x="40" y="360" data-for="bio">Bio</text>
-        <rect class="textarea" x="40" y="365" width="320" height="80" data-type="textarea" data-name="bio"/>
-        <text class="input-placeholder" x="50" y="387" data-placeholder="bio">Tell us about yourself...</text>
-
-        <!-- Checkbox: Terms -->
-        <rect class="checkbox" x="40" y="465" width="16" height="16" data-type="checkbox" data-name="terms"/>
-        <text class="label" x="65" y="477" data-for="terms">I agree to the Terms and Conditions</text>
-
-        <!-- Radio buttons: Newsletter -->
-        <text class="label" x="40" y="505" data-for="newsletter">Newsletter Subscription</text>
-        <circle class="radio" cx="48" cy="523" r="8" data-type="radio" data-name="newsletter" data-value="yes"/>
-        <text class="label" x="65" y="527">Yes, subscribe me</text>
-        <circle class="radio" cx="180" cy="523" r="8" data-type="radio" data-name="newsletter" data-value="no"/>
-        <text class="label" x="197" y="527">No, thanks</text>
-
-        <!-- Submit Button -->
-        <rect class="button" x="120" y="550" width="160" height="40" data-type="button" data-action="submit"/>
-        <text class="button-text" x="200" y="575" text-anchor="middle">Create Account</text>
-    </g>
+    <!-- Formularz interaktywny w foreignObject -->
+    <foreignObject x="20" y="100" width="360" height="670">
+      <div xmlns="http://www.w3.org/1999/xhtml">
+        <form id="interactive-form" style="width:100%;height:100%;padding:10px;box-sizing:border-box;background:transparent;">
+          <div style="margin-bottom:15px;"><label style="display:block;color:#9ca3af;font-size:12px;margin-bottom:5px;">Username</label><input type="text" name="username" placeholder="Enter your username" style="width:100%;padding:8px 10px;background:#1f1f1f;border:1px solid #404040;border-radius:4px;color:#e5e7eb;font-size:14px;box-sizing:border-box;" /></div>
+          <div style="margin-bottom:15px;"><label style="display:block;color:#9ca3af;font-size:12px;margin-bottom:5px;">Email Address</label><input type="email" name="email" placeholder="your.email@example.com" style="width:100%;padding:8px 10px;background:#1f1f1f;border:1px solid #404040;border-radius:4px;color:#e5e7eb;font-size:14px;box-sizing:border-box;" /></div>
+          <div style="margin-bottom:15px;"><label style="display:block;color:#9ca3af;font-size:12px;margin-bottom:5px;">Password</label><input type="password" name="password" style="width:100%;padding:8px 10px;background:#1f1f1f;border:1px solid #404040;border-radius:4px;color:#e5e7eb;font-size:14px;box-sizing:border-box;" /></div>
+          <div style="margin-bottom:15px;"><label style="display:block;color:#9ca3af;font-size:12px;margin-bottom:5px;">Country</label><select name="country" style="width:100%;padding:8px 10px;background:#1f1f1f;border:1px solid #404040;border-radius:4px;color:#e5e7eb;font-size:14px;box-sizing:border-box;"><option value="">Select your country</option><option value="pl">Poland</option><option value="de">Germany</option><option value="fr">France</option><option value="es">Spain</option><option value="it">Italy</option><option value="uk">United Kingdom</option><option value="us">United States</option></select></div>
+          <div style="margin-bottom:15px;"><label style="display:block;color:#9ca3af;font-size:12px;margin-bottom:5px;">Bio</label><textarea name="bio" placeholder="Tell us about yourself..." rows="3" style="width:100%;padding:8px 10px;background:#1f1f1f;border:1px solid #404040;border-radius:4px;color:#e5e7eb;font-size:14px;box-sizing:border-box;resize:vertical;"></textarea></div>
+          <div style="margin-bottom:15px;display:flex;align-items:center;"><input type="checkbox" name="terms" style="margin-right:8px;" /><label style="color:#9ca3af;font-size:12px;">I agree to the Terms and Conditions</label></div>
+          <div style="margin-bottom:15px;"><label style="display:block;color:#9ca3af;font-size:12px;margin-bottom:5px;">Newsletter Subscription</label><div style="display:inline-block;margin-right:20px;"><input type="radio" name="newsletter" value="yes" style="margin-right:5px;" /><label style="color:#9ca3af;font-size:12px;">Yes, subscribe me</label></div><div style="display:inline-block;margin-right:20px;"><input type="radio" name="newsletter" value="no" style="margin-right:5px;" /><label style="color:#9ca3af;font-size:12px;">No, thanks</label></div></div>
+          <button type="submit" style="width:100%;margin-top:20px;padding:12px;background:#3b82f6;color:white;border:none;border-radius:6px;font-size:14px;font-weight:600;cursor:pointer;">Create Account</button>
+        </form>
+      </div>
+    </foreignObject>
 
     <!-- Skrypt transformacji (wykonywany tylko w przeglądarce) -->
-    <script>
+    <script type="text/javascript">
       <![CDATA[
+        // Prosty kod do obsługi formularza
         document.addEventListener('DOMContentLoaded', function() {
           try {
-            const container = document.getElementById('svg-form-container');
-            if (!container) return;
-
-            // Stwórz kontener HTML w SVG
-            const fo = document.createElementNS('http://www.w3.org/2000/svg', 'foreignObject');
-            fo.setAttribute('x', '20');
-            fo.setAttribute('y', '80');
-            fo.setAttribute('width', '360');
-            fo.setAttribute('height', '470');
-
-            const div = document.createElementNS('http://www.w3.org/1999/xhtml', 'div');
-
-            // Wstaw formularz HTML
-            div.innerHTML = `
-              <form id="interactive-form" style="width:100%;height:100%;padding:10px;box-sizing:border-box;background:transparent;">
-                <div style="margin-bottom:15px;"><label style="display:block;color:#9ca3af;font-size:12px;margin-bottom:5px;">Username</label><input type="text" name="username" placeholder="Enter your username" style="width:100%;padding:8px 10px;background:#1f1f1f;border:1px solid #404040;border-radius:4px;color:#e5e7eb;font-size:14px;box-sizing:border-box;" /></div>
-                <div style="margin-bottom:15px;"><label style="display:block;color:#9ca3af;font-size:12px;margin-bottom:5px;">Email Address</label><input type="email" name="email" placeholder="your.email@example.com" style="width:100%;padding:8px 10px;background:#1f1f1f;border:1px solid #404040;border-radius:4px;color:#e5e7eb;font-size:14px;box-sizing:border-box;" /></div>
-                <div style="margin-bottom:15px;"><label style="display:block;color:#9ca3af;font-size:12px;margin-bottom:5px;">Password</label><input type="password" name="password" style="width:100%;padding:8px 10px;background:#1f1f1f;border:1px solid #404040;border-radius:4px;color:#e5e7eb;font-size:14px;box-sizing:border-box;" /></div>
-                <div style="margin-bottom:15px;"><label style="display:block;color:#9ca3af;font-size:12px;margin-bottom:5px;">Country</label><select name="country" style="width:100%;padding:8px 10px;background:#1f1f1f;border:1px solid #404040;border-radius:4px;color:#e5e7eb;font-size:14px;box-sizing:border-box;"><option value="">Select your country</option><option value="pl">Poland</option><option value="de">Germany</option><option value="fr">France</option><option value="es">Spain</option><option value="it">Italy</option><option value="uk">United Kingdom</option><option value="us">United States</option></select></div>
-                <div style="margin-bottom:15px;"><label style="display:block;color:#9ca3af;font-size:12px;margin-bottom:5px;">Bio</label><textarea name="bio" placeholder="Tell us about yourself..." rows="3" style="width:100%;padding:8px 10px;background:#1f1f1f;border:1px solid #404040;border-radius:4px;color:#e5e7eb;font-size:14px;box-sizing:border-box;resize:vertical;"></textarea></div>
-                <div style="margin-bottom:15px;display:flex;align-items:center;"><input type="checkbox" name="terms" style="margin-right:8px;" /><label style="color:#9ca3af;font-size:12px;">I agree to the Terms and Conditions</label></div>
-                <div style="margin-bottom:15px;"><label style="display:block;color:#9ca3af;font-size:12px;margin-bottom:5px;">Newsletter Subscription</label><div style="display:inline-block;margin-right:20px;"><input type="radio" name="newsletter" value="yes" style="margin-right:5px;" /><label style="color:#9ca3af;font-size:12px;">Yes, subscribe me</label></div><div style="display:inline-block;margin-right:20px;"><input type="radio" name="newsletter" value="no" style="margin-right:5px;" /><label style="color:#9ca3af;font-size:12px;">No, thanks</label></div></div>
-                <button type="submit" style="width:100%;margin-top:20px;padding:12px;background:#3b82f6;color:white;border:none;border-radius:6px;font-size:14px;font-weight:600;cursor:pointer;">Create Account</button>
-              </form>
-            `;
-
-            // Dodaj obsługę formularza
-            setTimeout(() => {
-              const form = div.querySelector('#interactive-form');
-              if (form) form.addEventListener('submit', function(e) {
+            // Pobierz formularz bezpośrednio z SVG
+            const form = document.getElementById('interactive-form');
+            if (form) {
+              form.addEventListener('submit', function(e) {
                 e.preventDefault();
                 alert('Form submitted successfully!');
               });
-            }, 0);
-
-            // Dodaj obsługę formularza
-            setTimeout(() => {
-              const form = div.querySelector('#interactive-form');
-              if (form) form.addEventListener('submit', function(e) {
-                e.preventDefault();
-                alert('Form submitted successfully!');
-              });
-            }, 0);
-
-            container.innerHTML = '';
-            fo.appendChild(div);
-            container.appendChild(fo);
+            }
           } catch (error) {
             console.error('Form error:', error);
           }
